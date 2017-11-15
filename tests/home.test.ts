@@ -10,6 +10,7 @@ describe('GET /', () => {
       .expect(200)
       .then(res => {
         expect(res.body).have.property('message');
+        expect(res.body).have.property('version');
       });
   });
 });
