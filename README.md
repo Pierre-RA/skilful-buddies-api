@@ -25,6 +25,7 @@ A post install script will transpile Typescript code into javascript. Transpiled
 | **PORT** | `3000` | PORT on which the server will run |
 | **SIGNUP_STATUS** | `off` | signup status: `off` &#124; `restricted` &#124; `on` |
 | **ADMIN_TOKEN** | `null` | ADMIN_TOKEN for signup process |
+| **MONGODB_URI** | `null` | mandatory mongodb URI |
 
 ### Tests
 
