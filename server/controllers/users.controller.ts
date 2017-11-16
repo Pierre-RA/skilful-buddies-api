@@ -6,16 +6,12 @@ import { User } from '../models/user';
 
 const router = Router();
 
+router.options('/', cors());
 router.options('/facebook', cors());
+router.options('/:id', cors());
 
-router.get('/', (req: Request, res: Response) => {
+router.get('/', cors(), (req: Request, res: Response) => {
   User.find({}, (err, doc) => {
-    res.json(doc);
-  });
-});
-
-router.get('/:id', (req: Request, res: Response) => {
-  User.findOne({ _id: req.params.id }, (err, doc) => {
     res.json(doc);
   });
 });
@@ -52,6 +48,10 @@ router.post('/facebook', (req: Request, res: Response) => {
     });
 });
 
-
+router.get('/:id', (req: Request, res: Response) => {
+  User.findOne({ _id: req.params.id }, (err, doc) => {
+    res.json(doc);
+  });
+});
 
 export default router;
