@@ -44,6 +44,9 @@ router.post('/facebook', cors(), (req: Request, res: Response) => {
       return updateFriends(doc, req.body['access_token']);
     })
     .then((doc: any) => {
+      return updatePicture(doc, req.body['access_token']);
+    })
+    .then((doc: any) => {
       res.json(doc);
     })
     .catch((err: any) => {
@@ -87,9 +90,22 @@ function getFbFriends(fbToken: string) {
 function getFbPicture(fbToken: string) {
   return request({
     method: 'GET',
-    uri: 'https://graph.facebook.com/me/picture?access_token=' + fbToken,
+    uri: 'https://graph.facebook.com/me/picture?type=large&redirect=false&access_token=' + fbToken,
     json: true
   });
+}
+
+function updatePicture(user: any, token: string) {
+  return getFbPicture(token)
+    .then((response: any) => {
+      return User.findOneAndUpdate(
+        { _id: user.id },
+        { picture: response.data.url },
+        { new: true }).populate('friends');
+    })
+    .catch(err => {
+      return err;
+    });
 }
 
 function updateFriends(user: any, token: string) {

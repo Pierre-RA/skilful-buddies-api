@@ -6,6 +6,7 @@ export interface IUser {
   name: string;
   gender: string;
   slug: string;
+  picture: string;
   social: {
     facebook: string,
     linkedIn: string,
@@ -28,6 +29,9 @@ export let userSchema = new Mongoose.Schema({
     type: String,
     required: true,
     unique: true
+  },
+  picture: {
+    type: String
   },
   social: {
     facebook: {
