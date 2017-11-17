@@ -12,7 +12,9 @@ router.options('/facebook', cors());
 router.options('/:id', cors());
 
 router.get('/', cors(), (req: Request, res: Response) => {
-  User.find({}, (err, doc) => {
+  User.find({})
+    .populate('friends')
+    .then(doc => {
     res.json(doc);
   });
 });
@@ -53,7 +55,9 @@ router.post('/facebook', cors(), (req: Request, res: Response) => {
 });
 
 router.get('/:id', (req: Request, res: Response) => {
-  User.findOne({ _id: req.params.id }, (err, doc) => {
+  User.findOne({ _id: req.params.id })
+    .populate('friends')
+    .then(doc => {
     res.json(doc);
   });
 });

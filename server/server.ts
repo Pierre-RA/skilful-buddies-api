@@ -8,6 +8,7 @@ import usersController from './controllers/users.controller';
 
 dotenv.config();
 
+(<any>mongoose).Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI, {
   useMongoClient: true
 });
