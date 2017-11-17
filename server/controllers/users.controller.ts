@@ -57,7 +57,7 @@ router.post('/facebook', cors(), (req: Request, res: Response) => {
     });
 });
 
-router.get('/:id', (req: Request, res: Response) => {
+router.get('/:id', cors(), (req: Request, res: Response) => {
   User.findOne({ _id: req.params.id })
     .populate('friends')
     .then(doc => {
