@@ -7,7 +7,6 @@ export interface IUser {
   gender: string;
   slug: string;
   picture: string;
-  city: string;
   social: {
     facebook: string,
     linkedIn: string,
@@ -17,6 +16,7 @@ export interface IUser {
   place: {
     address: string,
     city: string,
+    state: string,
     country: string,
     latitude: number,
     longitude: number
@@ -38,9 +38,6 @@ export let userSchema = new Mongoose.Schema({
     required: true,
     unique: true
   },
-  city: {
-    type: String
-  },
   picture: {
     type: String
   },
@@ -61,6 +58,7 @@ export let userSchema = new Mongoose.Schema({
   place: {
     address: String,
     city: String,
+    state: String,
     country: String,
     latitude: Number,
     longitude: Number

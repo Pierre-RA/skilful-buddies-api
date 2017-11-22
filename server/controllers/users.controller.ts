@@ -1,14 +1,18 @@
 import { Request, Response, Router } from 'express';
+import * as dotenv from 'dotenv';
 import * as cors from 'cors';
 import * as request from 'request-promise';
 import * as slug from 'slug';
 
+import parseGeoCoder from '../utils/parse-geocoder';
 import { User } from '../models/user';
 
+dotenv.config();
 const router = Router();
 
 router.options('/', cors());
 router.options('/facebook', cors());
+router.options('/geocode/:id', cors());
 router.options('/:id', cors());
 
 router.get('/', cors(), (req: Request, res: Response) => {
@@ -78,6 +82,33 @@ router.put('/:id', cors(), (req: Request, res: Response) => {
   });
 });
 
+router.put('/geocode/:id', cors(), (req: Request, res: Response) => {
+  getGeocode(req.body.address)
+    .then(response => {
+      return parseGeoCoder(response);
+    })
+    .then(response => {
+      if (!response) {
+        res.status(400).json({
+          message: 'address not found'
+        });
+      } else {
+        return User.findOneAndUpdate(
+          { _id: req.params.id },
+          { place: response },
+          { new: true }
+        );
+      }
+    })
+    .then(response => {
+      res.json(response);
+    })
+    .catch(err => {
+      res.status(400)
+        .json(err);
+    });
+});
+
 export default router;
 
 function findByFacebookId(id: string) {
@@ -104,6 +135,15 @@ function getFbPicture(fbToken: string) {
   return request({
     method: 'GET',
     uri: 'https://graph.facebook.com/me/picture?type=large&redirect=false&access_token=' + fbToken,
+    json: true
+  });
+}
+
+function getGeocode(address: string) {
+  address = address.replace(/ /, '+');
+  return request({
+    method: 'GET',
+    uri: 'https://maps.googleapis.com/maps/api/geocode/json?address=' + address + '&key=' + process.env.GOOGLE_GEOCODE_API,
     json: true
   });
 }
