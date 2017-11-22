@@ -65,15 +65,17 @@ router.get('/:id', cors(), (req: Request, res: Response) => {
   });
 });
 
-router.put(':/id', cors(), (req: Request, res: Response) => {
-  User.findOneAndUpdate({ _id: req.params.id }, req.body)
-    .then(doc => {
-      res.json(doc);
-    })
-    .catch(err => {
-      res.status(400)
-        .json(err);
-    });
+router.put('/:id', cors(), (req: Request, res: Response) => {
+  User.findOneAndUpdate(
+    { _id: req.params.id },
+    req.body,
+    { new: true }
+  ).then(doc => {
+    res.json(doc);
+  }).catch(err => {
+    res.status(400)
+      .json(err);
+  });
 });
 
 export default router;
