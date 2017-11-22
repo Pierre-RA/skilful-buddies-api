@@ -14,6 +14,13 @@ export interface IUser {
     google: string,
     twitter: string
   };
+  place: {
+    address: string,
+    city: string,
+    country: string,
+    latitude: number,
+    longitude: number
+  }
   skills: Array<string>;
   friends: Array<IUser>;
 }
@@ -50,6 +57,13 @@ export let userSchema = new Mongoose.Schema({
     twitter: {
       type: String
     }
+  },
+  place: {
+    address: String,
+    city: String,
+    country: String,
+    latitude: Number,
+    longitude: Number
   },
   skills: [String],
   friends: [{ type: Mongoose.Schema.Types.ObjectId, ref: 'User' }]
