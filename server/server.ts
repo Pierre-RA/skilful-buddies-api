@@ -5,6 +5,7 @@ import * as mongoose from 'mongoose';
 
 import homeController from './controllers/home.controller';
 import usersController from './controllers/users.controller';
+import skillsController from './controllers/skills.controller';
 
 dotenv.config();
 
@@ -36,6 +37,7 @@ app.all('*', (req: express.Request, res: express.Response, next: express.NextFun
  */
 app.use('/', homeController);
 app.use('/users', usersController);
+app.use('/skills', skillsController);
 
 /**
  * Start server

@@ -64,6 +64,8 @@ router.delete('/:id', cors(), (req: Request, res: Response) => {
     });
 });
 
+export default router;
+
 function addSkill(skill: any) {
   return User.findOneAndUpdate(
     { id: skill.owner._id },

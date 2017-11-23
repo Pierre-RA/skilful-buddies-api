@@ -64,6 +64,7 @@ router.post('/facebook', cors(), (req: Request, res: Response) => {
 router.get('/:id', cors(), (req: Request, res: Response) => {
   User.findOne({ _id: req.params.id })
     .populate('friends')
+    .populate('skills')
     .then(doc => {
     res.json(doc);
   });
