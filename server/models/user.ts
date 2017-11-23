@@ -1,4 +1,5 @@
 import * as Mongoose from 'mongoose';
+import { ISkill } from './skill';
 
 interface IUserModel extends IUser, Mongoose.Document {}
 
@@ -21,7 +22,7 @@ export interface IUser {
     latitude: number,
     longitude: number
   }
-  skills: Array<string>;
+  skills: Array<ISkill>;
   friends: Array<IUser>;
 }
 
@@ -63,7 +64,7 @@ export let userSchema = new Mongoose.Schema({
     latitude: Number,
     longitude: Number
   },
-  skills: [String],
+  skills: [{ type: Mongoose.Schema.Types.ObjectId, ref: 'Skill' }],
   friends: [{ type: Mongoose.Schema.Types.ObjectId, ref: 'User' }]
 });
 
