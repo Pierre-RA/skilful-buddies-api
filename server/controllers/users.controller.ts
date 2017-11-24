@@ -28,7 +28,7 @@ router.post('/facebook', cors(), (req: Request, res: Response) => {
   getFbUser(req.body['access_token'])
     .then((response: any) => {
       fbUser = response;
-      return findByFacebookId(fbUser.id);
+      return findByFacebookId(fbUser.id, null);
     })
     .then((doc: any) => {
       if (!doc) {
@@ -112,7 +112,13 @@ router.put('/geocode/:id', cors(), (req: Request, res: Response) => {
 
 export default router;
 
-function findByFacebookId(id: string) {
+function findByFacebookId(id: string, userId: string) {
+  if (userId) {
+    return User.findOneAndUpdate(
+      { 'social.facebook' : id },
+      { $push: { friends: userId} }
+    );
+  }
   return User.findOne({ 'social.facebook' : id });
 }
 
@@ -180,7 +186,7 @@ function updateFriends(user: any, token: string) {
 function compareFriends(user: any, fbFriends: Array<Object>) {
   let promises: any[] = [];
   fbFriends.forEach((friend: any) => {
-    promises.push(findByFacebookId(friend['id']));
+    promises.push(findByFacebookId(friend['id'], user._id));
   });
   return Promise.all(promises)
     .then(values => {
