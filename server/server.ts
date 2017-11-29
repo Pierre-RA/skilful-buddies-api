@@ -11,6 +11,8 @@ import usersController from './controllers/users.controller';
 import skillsController from './controllers/skills.controller';
 import chatController from './controllers/chat.controller';
 
+import { Chat } from './models/chat';
+
 dotenv.config();
 
 (<any>mongoose).Promise = global.Promise;
@@ -70,8 +72,8 @@ io.on('connection', (socket: any) => {
     console.log('user disconnected');
   });
   socket.on('add-message', (message: any) => {
-    console.log('message: ' + message);
-    io.emit('message', {type: 'new-message', text: message});
+    console.log('message: ', message);
+    io.emit('message', {type: 'new-message', message});
   });
 });
 
