@@ -64,11 +64,27 @@ router.post('/facebook', cors(), (req: Request, res: Response) => {
 });
 
 router.get('/friends/:id', cors(), (req: Request, res: Response) => {
-  User.findOne({ _id: req.params.id }, 'friends')
-    .populate('friends', 'name')
-    .then(doc => {
-    res.json(doc);
-  });
+  if (req.query.name) {
+    User.findOne({ _id: req.params.id }, 'friends')
+      .populate({
+        path: 'friends',
+        select: 'name',
+        match: { name: {$regex: req.query.name, $options: 'i' }},
+      })
+      .then(doc => {
+        res.json(doc);
+      })
+      .catch(err => {
+        res.status(400)
+          .json(err);
+      });
+  } else {
+    User.findOne({ _id: req.params.id }, 'friends')
+      .populate('friends', 'name')
+      .then(doc => {
+      res.json(doc);
+    });
+  }
 });
 
 router.get('/:id', cors(), (req: Request, res: Response) => {
