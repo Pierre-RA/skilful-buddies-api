@@ -2,10 +2,14 @@ import * as express from 'express';
 import * as dotenv from 'dotenv';
 import * as bodyParser from 'body-parser';
 import * as mongoose from 'mongoose';
+import * as http from 'http';
+import * as socket from 'socket.io';
+import * as cors from 'cors';
 
 import homeController from './controllers/home.controller';
 import usersController from './controllers/users.controller';
 import skillsController from './controllers/skills.controller';
+import chatController from './controllers/chat.controller';
 
 dotenv.config();
 
@@ -35,17 +39,43 @@ app.all('*', (req: express.Request, res: express.Response, next: express.NextFun
 /**
  * Routes
  */
+app.use(cors({
+  origin: 'http://localhost:4200',
+  methods: 'GET,HEAD,PUT,PATCH,POST,DELETE',
+  preflightContinue: false,
+  optionsSuccessStatus: 200,
+  credentials: true
+}));
 app.use('/', homeController);
 app.use('/users', usersController);
 app.use('/skills', skillsController);
+app.use('/chat', chatController);
 
 /**
  * Start server
  */
-app.listen(app.get('port'), () => {
+let server = app.listen(app.get('port'), () => {
   console.log(('App is running at http://localhost:%d in %s mode'),
     app.get('port'), app.get('env'));
   console.log('Press CTRL-C to stop\n');
 });
 
+/**
+ * Socket.io chat
+ */
+let io = socket.listen(server);
+io.on('connection', (socket: any) => {
+  console.log('a user connected');
+  socket.on('disconnect', () => {
+    console.log('user disconnected');
+  });
+  socket.on('add-message', (message: any) => {
+    console.log('message: ' + message);
+    io.emit('message', {type: 'new-message', text: message});
+  });
+});
+
+/**
+ * Exports app
+ */
 module.exports = app;

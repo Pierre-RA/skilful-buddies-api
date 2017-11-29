@@ -5,7 +5,7 @@ import * as request from 'request-promise';
 import * as slug from 'slug';
 
 import parseGeoCoder from '../utils/parse-geocoder';
-import { User } from '../models/user';
+import { User } from '../models';
 
 dotenv.config();
 const router = Router();
