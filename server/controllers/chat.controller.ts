@@ -38,6 +38,12 @@ router.post('/', cors(), (req: Request, res: Response) => {
   let chat = new Chat(req.body);
   chat.save()
     .then(doc => {
+      return doc.populate('user1').execPopulate();
+    })
+    .then(doc => {
+      return doc.populate('user2').execPopulate();
+    })
+    .then(doc => {
       res.json(doc);
     })
     .catch(err => {
