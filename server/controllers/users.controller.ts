@@ -13,10 +13,12 @@ const router = Router();
 router.options('/', cors());
 router.options('/facebook', cors());
 router.options('/geocode/:id', cors());
+router.options('/friends/:id', cors());
 router.options('/:id', cors());
 
 router.get('/', cors(), (req: Request, res: Response) => {
   User.find({})
+    .slice('friends', 8)
     .populate('friends')
     .then(doc => {
     res.json(doc);
@@ -61,8 +63,17 @@ router.post('/facebook', cors(), (req: Request, res: Response) => {
     });
 });
 
+router.get('/friends/:id', cors(), (req: Request, res: Response) => {
+  User.findOne({ _id: req.params.id }, 'friends')
+    .populate('friends', 'name')
+    .then(doc => {
+    res.json(doc);
+  });
+});
+
 router.get('/:id', cors(), (req: Request, res: Response) => {
   User.findOne({ _id: req.params.id })
+    .slice('friends', 8)
     .populate('friends')
     .populate('skills')
     .then(doc => {
