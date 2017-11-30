@@ -29,7 +29,7 @@ router.post('/', cors(), (req: Request, res: Response) => {
       return addSkill(doc);
     })
     .then(doc => {
-      return res.json(doc);
+      return res.json(skill);
     })
     .catch(err => {
       return res.status(400)
@@ -38,7 +38,7 @@ router.post('/', cors(), (req: Request, res: Response) => {
 });
 
 router.put('/:id', cors(), (req: Request, res: Response) => {
-  Skill.findOneAndUpdate({ _id: req.params.id}, req.body)
+  Skill.findOneAndUpdate({ _id: req.params.id}, req.body, { new: true })
     .then(doc => {
       return res.json(doc);
     })

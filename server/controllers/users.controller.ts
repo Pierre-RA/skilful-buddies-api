@@ -17,9 +17,8 @@ router.options('/facebook', cors());
 router.options('/geocode/:id', cors());
 router.options('/friends/:id', cors());
 router.options('/:id', cors());
-router.use(passport.authenticate('jwt', {session: false}));
 
-router.get('/', cors(), (req: Request, res: Response) => {
+router.get('/', cors(), passport.authenticate('jwt', {session: false}), (req: Request, res: Response) => {
   User.find({})
     .slice('friends', 8)
     .populate('friends')
@@ -71,7 +70,15 @@ router.post('/facebook', cors(), (req: Request, res: Response) => {
     });
 });
 
-router.get('/friends/:id', cors(), (req: Request, res: Response) => {
+// router.get('/friends', cors(), (req: Request, res: Response) => {
+//   if (req.query.name) {
+//     User.find()
+//   } else {
+// 
+//   }
+// });
+
+router.get('/friends/:id', cors(), passport.authenticate('jwt', {session: false}), (req: Request, res: Response) => {
   if (req.query.name) {
     User.findOne({ _id: req.params.id }, 'friends')
       .populate({
@@ -95,7 +102,7 @@ router.get('/friends/:id', cors(), (req: Request, res: Response) => {
   }
 });
 
-router.get('/:id', cors(), (req: Request, res: Response) => {
+router.get('/:id', cors(), passport.authenticate('jwt', {session: false}), (req: Request, res: Response) => {
   User.findOne({ _id: req.params.id })
     .slice('friends', 8)
     .populate('friends')
@@ -109,7 +116,7 @@ router.get('/:id', cors(), (req: Request, res: Response) => {
     });
 });
 
-router.put('/:id', cors(), (req: Request, res: Response) => {
+router.put('/:id', cors(), passport.authenticate('jwt', {session: false}), (req: Request, res: Response) => {
   User.findOneAndUpdate(
     { _id: req.params.id },
     req.body,
@@ -122,7 +129,7 @@ router.put('/:id', cors(), (req: Request, res: Response) => {
   });
 });
 
-router.put('/geocode/:id', cors(), (req: Request, res: Response) => {
+router.put('/geocode/:id', cors(), passport.authenticate('jwt', {session: false}), (req: Request, res: Response) => {
   getGeocode(req.body.address)
     .then(response => {
       return parseGeoCoder(response);
