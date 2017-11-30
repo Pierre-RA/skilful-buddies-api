@@ -13,6 +13,7 @@ import homeController from './controllers/home.controller';
 import usersController from './controllers/users.controller';
 import skillsController from './controllers/skills.controller';
 import chatController from './controllers/chat.controller';
+import tradeController from './controllers/trades.controller';
 
 import { Chat, User, JwtOptions } from './models';
 
@@ -78,6 +79,7 @@ app.use(cors({
 app.use('/', homeController);
 app.use('/users', usersController);
 app.use('/skills', skillsController);
+app.use('/trade', tradeController);
 app.use('/chat', chatController);
 
 /**
