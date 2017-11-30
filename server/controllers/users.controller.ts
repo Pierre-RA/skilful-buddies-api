@@ -107,6 +107,7 @@ router.get('/:id', cors(), passport.authenticate('jwt', {session: false}), (req:
     .slice('friends', 8)
     .populate('friends')
     .populate('skills')
+    .populate('trades')
     .then(doc => {
       res.json(doc);
     })

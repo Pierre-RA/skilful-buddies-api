@@ -7,6 +7,7 @@ export interface ISkill {
   name: string;
   content: string;
   owner: IUser;
+  color: string;
 }
 
 export let skillSchema = new Mongoose.Schema({
@@ -20,6 +21,13 @@ export let skillSchema = new Mongoose.Schema({
   owner: {
     type: Mongoose.Schema.Types.ObjectId,
     ref: 'Skill'
+  },
+  color: {
+    type: String,
+    default: 'hsl(' +
+      360 * Math.random() + ',' +
+      (25 + 70 * Math.random()) + '%,' + 
+      (85 + 10 * Math.random()) + '%)'
   }
 });
 

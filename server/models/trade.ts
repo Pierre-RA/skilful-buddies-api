@@ -11,6 +11,7 @@ export interface ITrade {
     value: number,
     type: string
   };
+  color: string;
 }
 
 export let tradeSchema = new Mongoose.Schema({
@@ -32,6 +33,13 @@ export let tradeSchema = new Mongoose.Schema({
   owner: {
     type: Mongoose.Schema.Types.ObjectId,
     ref: 'Trade'
+  },
+  color: {
+    type: String,
+    default: 'hsl(' +
+      360 * Math.random() + ',' +
+      (25 + 70 * Math.random()) + '%,' + 
+      (85 + 10 * Math.random()) + '%)'
   }
 });
 
