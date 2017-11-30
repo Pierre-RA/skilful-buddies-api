@@ -35,4 +35,4 @@ export let tradeSchema = new Mongoose.Schema({
   }
 });
 
-export let Trade = Mongoose.model<ITradeModel>('Skill', tradeSchema);
+export let Trade = Mongoose.model<ITradeModel>('Trade', tradeSchema);
