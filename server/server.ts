@@ -66,16 +66,43 @@ let server = app.listen(app.get('port'), () => {
  * Socket.io chat
  */
 let io = socket.listen(server);
-io.on('connection', (socket: any) => {
-  console.log('a user connected');
-  socket.on('disconnect', () => {
-    console.log('user disconnected');
+let rooms: any[];
+
+Chat.find({})
+  .then(chats => {
+    rooms = chats;
+    
+    io.sockets.on('connection', socket => {
+      
+      // DISCONNECT
+      socket.on('disconnect', () => {
+        console.log(new Date() + ' user disconnected');
+      });
+      
+      // HELLO
+      socket.on('send-hello', name => {
+        console.log(new Date() + ' ' + name + ' is connected.');
+      })
+      
+      // JOIN ROOM
+      socket.on('join-room', id => {
+        socket.join(id);
+        console.log(new Date() + ' joined room: ' + id);
+      });
+      
+      // ADD MESSAGE
+      socket.on('add-message', (message: any) => {
+        Chat.findOneAndUpdate({ _id: message.id }, {$push: { messages: {
+          user: message.user,
+          text: message.text,
+          date: message.date
+        }}}).then(doc => {
+          io.sockets.in(message.id).emit('message', message);
+          console.log(new Date() + ' add message to room: ' + message.id);
+        });
+      });
+    });
   });
-  socket.on('add-message', (message: any) => {
-    console.log('message: ', message);
-    io.emit('message', {type: 'new-message', message});
-  });
-});
 
 /**
  * Exports app
