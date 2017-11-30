@@ -36,10 +36,11 @@ export let tradeSchema = new Mongoose.Schema({
   },
   color: {
     type: String,
-    default: 'hsl(' +
+    default: () => { return 'hsl(' +
       360 * Math.random() + ',' +
       (25 + 70 * Math.random()) + '%,' + 
-      (85 + 10 * Math.random()) + '%)'
+      (25 + 10 * Math.random()) + '%)';
+    }
   }
 });
 
