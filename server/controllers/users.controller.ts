@@ -3,9 +3,10 @@ import * as dotenv from 'dotenv';
 import * as cors from 'cors';
 import * as request from 'request-promise';
 import * as slug from 'slug';
+import * as jwt from 'jsonwebtoken';
 
 import parseGeoCoder from '../utils/parse-geocoder';
-import { User } from '../models';
+import { User, JwtOptions } from '../models';
 
 dotenv.config();
 const router = Router();
@@ -53,7 +54,12 @@ router.post('/facebook', cors(), (req: Request, res: Response) => {
       return updatePicture(doc, req.body['access_token']);
     })
     .then((doc: any) => {
-      res.json(doc);
+      let jwtPayload = { id: doc._id };
+      let jwtToken = jwt.sign(jwtPayload, JwtOptions.secretOrKey);
+      res.json({
+        user: doc,
+        token: jwtToken
+      });
     })
     .catch((err: any) => {
       res.status(401).json({
@@ -93,8 +99,12 @@ router.get('/:id', cors(), (req: Request, res: Response) => {
     .populate('friends')
     .populate('skills')
     .then(doc => {
-    res.json(doc);
-  });
+      res.json(doc);
+    })
+    .catch(err => {
+      res.status(400)
+        .json(err);
+    });
 });
 
 router.put('/:id', cors(), (req: Request, res: Response) => {

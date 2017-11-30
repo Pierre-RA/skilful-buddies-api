@@ -1,15 +1,18 @@
 import { Request, Response, Router } from 'express';
 import * as cors from 'cors';
+import * as passport from 'passport';
 
 import { Chat } from '../models';
+import { isAuthenticated } from '../middleware';
 
 const router = Router();
 
 router.options('/', cors());
 router.options('/:id', cors());
+// router.use(passport.authenticate('jwt', {session: false}));
 
-router.get('/', cors(), (req: Request, res: Response) => {
-  Chat.find({})
+router.get('/', cors(), passport.authenticate('jwt', {session: false}), (req: Request, res: Response) => {
+  Chat.find({ $or: [ {user1: req.user}, {user2: req.user} ] })
     .populate('user1')
     .populate('user2')
     .then(doc => {

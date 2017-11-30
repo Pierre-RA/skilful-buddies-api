@@ -5,16 +5,23 @@ import * as mongoose from 'mongoose';
 import * as http from 'http';
 import * as socket from 'socket.io';
 import * as cors from 'cors';
+import * as jwt from 'jsonwebtoken';
+import * as passport from 'passport';
+import * as passportJWT from 'passport-jwt';
 
 import homeController from './controllers/home.controller';
 import usersController from './controllers/users.controller';
 import skillsController from './controllers/skills.controller';
 import chatController from './controllers/chat.controller';
 
-import { Chat } from './models/chat';
+import { Chat, User, JwtOptions } from './models';
 
 dotenv.config();
+const JwtStrategy = passportJWT.Strategy;
 
+/**
+ * MONGODB CONNECTION
+ */
 (<any>mongoose).Promise = global.Promise;
 mongoose.connect(process.env.MONGODB_URI, {
   useMongoClient: true
@@ -27,9 +34,29 @@ mongoose.connection.on('open', () => {
   console.log('MongoDB connection is open.');
 });
 
+/**
+ * JWT TOKEN STRATEGY
+ */
+const strategy = new JwtStrategy(JwtOptions, (payload: any, next: any) => {
+  User.findOne({ _id: payload.id }, (err, user) => {
+    if (err) {
+      return next(null, false);
+    }
+    if (user) {
+      return next(null, user);
+    }
+    return next(null, false);
+  });
+});
+passport.use(strategy);
+
+/**
+ * APP
+ */
 const app = express();
 
 app.set('port', process.env.PORT || 3000);
+app.use(passport.initialize());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
