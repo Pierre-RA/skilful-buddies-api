@@ -4,6 +4,7 @@ import * as cors from 'cors';
 import * as request from 'request-promise';
 import * as slug from 'slug';
 import * as jwt from 'jsonwebtoken';
+import * as passport from 'passport';
 
 import parseGeoCoder from '../utils/parse-geocoder';
 import { User, JwtOptions } from '../models';
@@ -16,6 +17,7 @@ router.options('/facebook', cors());
 router.options('/geocode/:id', cors());
 router.options('/friends/:id', cors());
 router.options('/:id', cors());
+router.use(passport.authenticate('jwt', {session: false}));
 
 router.get('/', cors(), (req: Request, res: Response) => {
   User.find({})

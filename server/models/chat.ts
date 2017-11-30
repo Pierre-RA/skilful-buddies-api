@@ -7,6 +7,7 @@ export interface IChat {
   user1: IUser;
   user2: IUser;
   title: string;
+  read: boolean;
   messages: Array<IMessage>;
 }
 
@@ -27,6 +28,10 @@ export let chatSchema = new Mongoose.Schema({
   },
   title: {
     type: String
+  },
+  read: {
+    type: Boolean,
+    default: false
   },
   messages: [{
     user: {

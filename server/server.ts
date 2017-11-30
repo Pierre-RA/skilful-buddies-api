@@ -123,11 +123,13 @@ Chat.find({})
           user: message.user,
           text: message.text,
           date: message.date
-        }}}).then(doc => {
+        }}, read: false }).then(doc => {
           io.sockets.in(message.id).emit('message', message);
           console.log(new Date() + ' add message to room: ' + message.id);
         });
       });
+      
+      // HAS READ THE ROOM
     });
   });
 

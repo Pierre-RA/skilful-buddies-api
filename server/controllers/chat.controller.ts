@@ -25,7 +25,7 @@ router.get('/', cors(), passport.authenticate('jwt', {session: false}), (req: Re
 });
 
 router.get('/:id', cors(), (req: Request, res: Response) => {
-  Chat.findOne({ _id: req.params.id })
+  Chat.findOneAndUpdate({ _id: req.params.id }, { read: true }, { new: true })
     .populate('user1')
     .populate('user2')
     .then(doc => {
